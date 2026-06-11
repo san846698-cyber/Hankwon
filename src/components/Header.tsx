@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const NAV = [
   { href: "/sample", label: "샘플" },
@@ -36,12 +37,15 @@ export default function Header() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 h-18 flex items-center justify-between py-4">
-        <a
-          href="/"
-          className="font-display text-2xl text-ink leading-none"
-          style={{ fontWeight: 800 }}
-        >
-          한권
+        <a href="/" className="flex items-center leading-none">
+          <Image
+            src="/logo-wordmark.png"
+            alt="한권"
+            width={124}
+            height={56}
+            className="h-10 w-auto"
+            priority
+          />
         </a>
 
         <nav className="hidden md:flex items-center gap-7">

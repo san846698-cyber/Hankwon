@@ -1,4 +1,6 @@
 import { ImageResponse } from "next/og";
+import fs from "fs";
+import path from "path";
 
 export const alt = "한권 — 부모님의 인생을 한 권의 책으로";
 export const size = { width: 1200, height: 630 };
@@ -19,10 +21,21 @@ async function loadFont(url: string): Promise<ArrayBuffer | null> {
   }
 }
 
+function loadLogoBase64(): string | null {
+  try {
+    const buf = fs.readFileSync(
+      path.join(process.cwd(), "public", "logo-wordmark.png"),
+    );
+    return `data:image/png;base64,${buf.toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
+
 export default async function Image() {
-  const [bold, regular] = await Promise.all([
-    loadFont(FONT_BOLD),
-    loadFont(FONT_REGULAR),
+  const [[bold, regular], logoSrc] = await Promise.all([
+    Promise.all([loadFont(FONT_BOLD), loadFont(FONT_REGULAR)]),
+    Promise.resolve(loadLogoBase64()),
   ]);
 
   const fonts = [
@@ -45,24 +58,36 @@ export default async function Image() {
           fontFamily: "Pretendard, sans-serif",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            color: "#A67C5A",
-            fontSize: 30,
-            letterSpacing: 10,
-            fontWeight: 700,
-            marginBottom: 56,
-          }}
-        >
-          한 권
-        </div>
+        {/* 로고 워드마크 */}
+        {logoSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={logoSrc}
+            alt="한권"
+            style={{ height: 72, width: "auto", marginBottom: 48, objectFit: "contain" }}
+          />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              color: "#A67C5A",
+              fontSize: 30,
+              letterSpacing: 10,
+              fontWeight: 700,
+              marginBottom: 48,
+            }}
+          >
+            한 권
+          </div>
+        )}
+
+        {/* 메인 카피 */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             color: "#2C2826",
-            fontSize: 92,
+            fontSize: 88,
             fontWeight: 700,
             lineHeight: 1.25,
             textAlign: "center",
@@ -75,12 +100,14 @@ export default async function Image() {
             한 권의 책으로
           </div>
         </div>
+
+        {/* 서브카피 */}
         <div
           style={{
             display: "flex",
             color: "#5C544F",
-            fontSize: 30,
-            marginTop: 56,
+            fontSize: 28,
+            marginTop: 48,
             fontWeight: 400,
           }}
         >
