@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { readQuestions, readMeta, type SessionQuestion } from "@/lib/questions";
 import QuestionForm from "./QuestionForm";
+import TTSButton from "@/components/TTSButton";
 
 type Props = { stepNum: number };
 
@@ -92,14 +93,19 @@ export default function QuestionPageClient({ stepNum }: Props) {
             {question.chapterIndex}장 — {question.chapterName}
           </p>
 
-          {/* Question text */}
-          <h1
+          {/* Question text + TTS */}
+          <div
             key={`q-${stepNum}`}
-            className="fade-up fade-up-delay-1 font-display text-2xl sm:text-3xl text-ink font-bold leading-snug mb-5 whitespace-pre-line balanced"
-            style={{ fontWeight: 700 }}
+            className="fade-up fade-up-delay-1 flex items-start gap-3 mb-5"
           >
-            {question.text}
-          </h1>
+            <h1
+              className="font-display text-2xl sm:text-3xl text-ink font-bold leading-snug whitespace-pre-line balanced flex-1"
+              style={{ fontWeight: 700 }}
+            >
+              {question.text}
+            </h1>
+            <TTSButton text={question.text} className="mt-1" />
+          </div>
 
           <p
             key={`hint-${stepNum}`}

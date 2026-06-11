@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ANSWERS_KEY, META_KEY } from "@/lib/questions";
 import { trackEvent } from "@/lib/analytics";
+import VoiceRecorder from "@/components/VoiceRecorder";
 
 type Props = {
   stepNum: number;
@@ -99,6 +100,14 @@ export default function QuestionForm({
     }
   }
 
+  function onTranscription(text: string) {
+    const next = value.trim() ? value.trimEnd() + "\n" + text : text;
+    setValue(next);
+    persistLocal(next);
+    // Focus textarea so user can review/edit
+    setTimeout(() => textareaRef.current?.focus(), 50);
+  }
+
   const canContinue = value.trim().length > 0;
 
   return (
@@ -109,9 +118,11 @@ export default function QuestionForm({
         onChange={onChange}
         placeholder="부모님의 답을 받아 적어주세요"
         rows={6}
-        className="fade-up fade-up-delay-3 w-full resize-none rounded-2xl bg-white/70 border border-beige-300 px-5 py-4 text-base leading-relaxed text-ink placeholder:text-ink-mute/60 focus:outline-none focus:border-ink focus:bg-white transition-colors mb-6"
+        className="fade-up fade-up-delay-3 w-full resize-none rounded-2xl bg-white/70 border border-beige-300 px-5 py-4 text-base leading-relaxed text-ink placeholder:text-ink-mute/60 focus:outline-none focus:border-ink focus:bg-white transition-colors mb-3"
         spellCheck={false}
       />
+
+      <VoiceRecorder onTranscription={onTranscription} />
 
       <div className="fade-up fade-up-delay-4 sticky bottom-6 mt-auto pt-4 bg-gradient-to-t from-beige via-beige to-transparent">
         <button
