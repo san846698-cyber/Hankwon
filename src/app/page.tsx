@@ -18,8 +18,8 @@ const STEPS = [
   },
   {
     num: "III",
-    title: "AI가 한 권으로 엮어요",
-    desc: "Claude가 부모님 표현을 보존하며 자연스러운 회고록 문체로 다듬어 50페이지의 책을 만들어 드립니다.",
+    title: "한 권으로 정성껏 엮어요",
+    desc: "부모님 표현을 그대로 살려 자연스러운 회고록 문체로 다듬어 50페이지의 책을 만들어 드립니다.",
   },
 ];
 
@@ -27,7 +27,7 @@ const PRICING_COMPARISON = [
   {
     name: "한권",
     price: "₩29,900",
-    desc: "AI가 만드는 부모님 자서전 · 한 시간 인터뷰",
+    desc: "부모님의 이야기를 담은 자서전 · 한 시간 인터뷰",
     accent: true,
   },
   {
@@ -38,7 +38,7 @@ const PRICING_COMPARISON = [
   {
     name: "레페토AI",
     price: "₩1,200,000",
-    desc: "한국 프리미엄 AI 자서전 서비스",
+    desc: "한국 프리미엄 자서전 서비스",
   },
   {
     name: "Storyworth",
@@ -113,7 +113,7 @@ export default function Home() {
               35가지 질문을 부모님과 함께 나누면
               <br className="hidden sm:inline" />
               <span className="sm:hidden"> </span>
-              AI가 한 시간을 한 권의 회고록으로 엮어드립니다.
+              한 시간의 이야기를 한 권의 회고록으로 정성껏 엮어드립니다.
             </p>
 
             <div className="fade-up fade-up-delay-3 max-w-md mx-auto">
@@ -263,8 +263,7 @@ export default function Home() {
                 회고록 문체.
               </h2>
               <p className="text-lg text-ink-soft leading-[1.75] mb-10 max-w-md">
-                AI가 답변에 없는 사실을 만들지 않고, 부모님의 단어와 비유를
-                그대로 보존하면서 자연스러운 산문으로 다듬습니다.
+                말씀 하나하나를 그대로 보존하면서 — 임의로 꾸며내지 않고 — 자연스러운 산문으로 정성껏 다듬습니다.
               </p>
               <a
                 href="/sample"

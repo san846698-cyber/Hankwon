@@ -66,8 +66,8 @@ export default function ListeningGuide() {
                 </h2>
                 <p className="text-base text-ink-soft leading-relaxed">
                   자녀가 듣기에 어색한 단어, 사투리, 옛 표현이 있더라도 그대로
-                  받아 적어주세요. 그 표현이 그대로 책의 톤이 됩니다. 한권의 AI는
-                  부모님 말투와 단어를 보존하도록 만들어져 있어요.
+                  받아 적어주세요. 그 표현이 그대로 책의 톤이 됩니다. 한권은
+                  부모님 말투와 단어를 그대로 보존하도록 만들어져 있어요.
                 </p>
               </section>
 

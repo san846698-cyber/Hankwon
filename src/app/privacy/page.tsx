@@ -24,7 +24,7 @@ const SECTIONS = [
     title: "2. 개인정보 이용 목적",
     body: (
       <ul className="list-disc list-outside ml-5 space-y-1.5 text-ink-soft">
-        <li>AI 자서전 생성 및 전달</li>
+        <li>자서전 생성 및 전달</li>
         <li>결제 처리 및 환불</li>
         <li>고객 문의 응대</li>
         <li>서비스 개선을 위한 통계 (개인 식별 불가능한 형태로만)</li>

@@ -84,7 +84,7 @@ export default async function Image() {
             fontWeight: 400,
           }}
         >
-          35가지 질문 · 한 시간 · AI가 한 권으로 엮어드려요
+          35가지 질문 · 한 시간 · 한 권의 책으로 정성껏 엮어드려요
         </div>
       </div>
     ),

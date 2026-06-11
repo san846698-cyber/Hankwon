@@ -127,7 +127,7 @@ export default function IntroForm() {
             알려주세요.
           </h1>
           <p className="text-base text-ink-soft leading-relaxed">
-            AI가 더 맥락에 맞는 책을 만들기 위해 활용돼요.
+            더 맥락에 맞는 책을 만드는 데 활용돼요.
             <br />
             모든 항목은 선택사항이에요.
           </p>

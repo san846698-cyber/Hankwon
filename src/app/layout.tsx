@@ -11,12 +11,12 @@ export const metadata: Metadata = {
     template: "%s — 한 권",
   },
   description:
-    "35가지 질문을 부모님과 함께 나누면 AI가 한 권의 책으로 엮어드려요. 어버이날, 환갑, 칠순 — 가족 모두에게 평생의 선물.",
+    "35가지 질문을 부모님과 함께 나누면 말씀 하나하나를 소중히 담아 한 권의 책으로 엮어드려요. 어버이날, 환갑, 칠순 — 가족 모두에게 평생의 선물.",
   keywords: [
     "한권",
     "한권 자서전",
-    "AI 자서전",
     "부모님 자서전",
+    "부모님 회고록",
     "어버이날 선물",
     "효도 선물",
     "회고록",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "한권 — 부모님의 인생을 한 권의 책으로",
     description:
-      "35가지 질문을 부모님과 함께 나누면 AI가 한 권의 책으로 엮어드려요.",
+      "35가지 질문을 부모님과 함께 나누면 말씀 하나하나를 소중히 담아 한 권의 책으로 엮어드려요.",
     type: "website",
     locale: "ko_KR",
     siteName: "한 권",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "한권 — 부모님의 인생을 한 권의 책으로",
     description:
-      "35가지 질문을 부모님과 함께 나누면 AI가 한 권의 책으로 엮어드려요.",
+      "35가지 질문을 부모님과 함께 나누면 말씀 하나하나를 소중히 담아 한 권의 책으로 엮어드려요.",
   },
   robots: {
     index: true,

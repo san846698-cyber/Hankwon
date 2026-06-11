@@ -6,7 +6,7 @@ import PageCTA from "@/components/PageCTA";
 export const metadata: Metadata = {
   title: "부모님 자서전 / 회고록 만드는 4가지 방법",
   description:
-    "전통 자서전 대필부터 AI 자서전 서비스까지, 부모님의 인생을 책으로 남기는 방법을 비교했습니다.",
+    "전통 자서전 대필부터 자서전 서비스까지, 부모님의 인생을 책으로 남기는 방법을 비교했습니다.",
   alternates: { canonical: "/guides/memoir-writing" },
 };
 
@@ -23,7 +23,7 @@ export default function MemoirGuide() {
               <span className="text-accent-dark">어떻게 만들까요?</span>
             </>
           }
-          subtitle="전통 대필부터 AI까지, 부모님 인생을 책으로 남기는 4가지 방법"
+          subtitle="전통 대필부터 디지털 서비스까지, 부모님 인생을 책으로 남기는 4가지 방법"
         />
 
         <article className="px-6 py-16 bg-beige">
@@ -62,10 +62,10 @@ export default function MemoirGuide() {
 
             <section className="mb-10">
               <h2 className="text-2xl font-bold mb-4 leading-tight">
-                2. 프리미엄 AI 자서전 — ₩100~150만원
+                2. 프리미엄 자서전 서비스 — ₩100~150만원
               </h2>
               <p className="text-base text-ink-soft leading-relaxed mb-4">
-                레페토AI(엄마의인터뷰) 같은 한국 서비스. AI를 활용하지만 가격은
+                레페토AI(엄마의인터뷰) 같은 한국 서비스. 편리하지만 가격은
                 여전히 프리미엄대입니다. 누적 50권 정도가 만들어졌어요.
               </p>
               <ul className="space-y-2 text-sm text-ink-soft mb-3">
@@ -89,8 +89,8 @@ export default function MemoirGuide() {
                 3. 한권 — ₩29,900
               </h2>
               <p className="text-base text-ink-soft leading-relaxed mb-4">
-                한권의 길은 자녀가 직접 부모님을 인터뷰하고, AI가 그 답변을
-                자연스러운 회고록으로 다듬는 모델입니다. 시간은 한 시간, 가격은
+                한권의 길은 자녀가 직접 부모님을 인터뷰하고, 그 답변을
+                자연스러운 회고록으로 정성껏 다듬는 방식입니다. 시간은 한 시간, 가격은
                 ₩29,900.
               </p>
               <ul className="space-y-2 text-sm text-ink-soft mb-3">
@@ -147,7 +147,7 @@ export default function MemoirGuide() {
               <div className="bg-white/70 border border-beige-300 rounded-xl p-4">
                 <p className="text-sm text-ink leading-relaxed">
                   <strong>100만원 정도 예산 + 인쇄본 필수</strong> · 레페토AI
-                  같은 프리미엄 AI 서비스
+                  같은 프리미엄 자서전 서비스
                 </p>
               </div>
               <div className="bg-white/70 border border-accent rounded-xl p-4">

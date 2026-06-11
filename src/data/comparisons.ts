@@ -68,7 +68,7 @@ export const COMPARISONS: Comparison[] = [
       },
       {
         feature: "소요 기간",
-        us: "한 시간 + 24시간 AI 생성",
+        us: "한 시간 인터뷰 + 24시간 내 완성",
         them: "6개월 ~ 1년",
       },
       {
@@ -78,7 +78,7 @@ export const COMPARISONS: Comparison[] = [
       },
       {
         feature: "글쓰기",
-        us: "AI가 부모님 표현 보존하며 다듬기",
+        us: "부모님 표현 그대로 보존하며 다듬기",
         them: "작가의 풍부한 문체",
       },
       {
@@ -103,9 +103,9 @@ export const COMPARISONS: Comparison[] = [
   {
     slug: "repeto",
     competitor: "레페토AI",
-    title: "한권 vs 레페토AI — 한국 AI 자서전 서비스 비교",
+    title: "한권 vs 레페토AI — 한국 자서전 서비스 비교",
     intro:
-      "레페토AI(엄마의인터뷰)는 한국에서 가장 먼저 시작된 AI 자서전 서비스입니다. 한권은 비슷한 모델이지만 가격대와 흐름이 다른 길을 선택했어요.",
+      "레페토AI(엄마의인터뷰)는 한국에서 가장 먼저 시작된 자서전 서비스입니다. 한권은 비슷한 모델이지만 가격대와 흐름이 다른 길을 선택했어요.",
     rows: [
       {
         feature: "가격",
@@ -113,7 +113,7 @@ export const COMPARISONS: Comparison[] = [
         them: "₩1,200,000",
       },
       {
-        feature: "AI 모델",
+        feature: "작성 방식",
         us: "Claude (Anthropic)",
         them: "비공개",
       },

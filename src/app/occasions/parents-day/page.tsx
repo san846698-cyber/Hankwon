@@ -44,8 +44,8 @@ export default function ParentsDayPage() {
             </p>
             <p className="text-base text-ink-soft leading-relaxed mb-10">
               한권은 이 시간을 한 권의 책으로 남기는 서비스예요. 부모님과 한
-              시간 마주 앉아 35가지 질문을 나누면, AI가 부모님의 말씀을
-              자연스러운 회고록으로 다듬어 50페이지 분량의 책으로 만들어
+              시간 마주 앉아 35가지 질문을 나누면, 부모님의 말씀 하나하나를
+              소중히 담아 자연스러운 회고록으로 50페이지 분량의 책으로 만들어
               드립니다.
             </p>
 
@@ -57,8 +57,8 @@ export default function ParentsDayPage() {
                   마주 앉아 35가지 질문 인터뷰 (한 시간)
                 </li>
                 <li>
-                  <strong className="text-ink">5월 7일</strong> · AI가 책으로
-                  엮어 PDF 발송 (24시간 내)
+                  <strong className="text-ink">5월 7일</strong> · 책으로
+                  정성껏 엮어 PDF 발송 (24시간 내)
                 </li>
                 <li>
                   <strong className="text-ink">5월 8일 어버이날</strong> ·

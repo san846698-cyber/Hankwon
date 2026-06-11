@@ -164,7 +164,7 @@ export default function QuestionsGuide() {
 
         <PageCTA
           title="35가지 질문, 한 권의 책으로"
-          description="자녀가 받아 적은 답변을 AI가 자연스러운 회고록으로 다듬어 드려요."
+          description="자녀가 받아 적은 답변을 자연스러운 회고록으로 정성껏 다듬어 드려요."
         />
       </main>
       <Footer />

@@ -51,8 +51,8 @@ export default function ChuseokPage() {
                   모인 자리에서 한 시간 정도 마주 앉아 인터뷰
                 </li>
                 <li>
-                  <strong className="text-ink">2~3일 후</strong> · AI가 책으로
-                  엮어 PDF 발송
+                  <strong className="text-ink">2~3일 후</strong> · 책으로
+                  정성껏 엮어 PDF 발송
                 </li>
                 <li>
                   <strong className="text-ink">가족 단톡방 공유</strong> ·
