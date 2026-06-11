@@ -137,7 +137,7 @@ export default function ListeningGuide() {
 
         <PageCTA
           title="이제 부모님께 여쭤볼 차례예요"
-          description="35가지 질문이 자녀의 인터뷰를 도와드립니다."
+          description="한권의 질문들이 자녀의 인터뷰를 도와드립니다."
         />
       </main>
       <Footer />

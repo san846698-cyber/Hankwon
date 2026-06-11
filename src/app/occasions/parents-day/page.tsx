@@ -6,7 +6,7 @@ import PageCTA from "@/components/PageCTA";
 export const metadata: Metadata = {
   title: "어버이날 선물, 부모님의 인생을 한 권의 책으로",
   description:
-    "올해 어버이날, 꽃과 봉투 대신 부모님의 인생 이야기를 한 권의 책으로 선물해보세요. 35가지 질문, 한 시간이면 평생의 책이 됩니다.",
+    "올해 어버이날, 꽃과 봉투 대신 부모님의 인생 이야기를 한 권의 책으로 선물해보세요. 한 시간이면 평생의 책이 됩니다.",
   alternates: { canonical: "/occasions/parents-day" },
 };
 
@@ -44,7 +44,7 @@ export default function ParentsDayPage() {
             </p>
             <p className="text-base text-ink-soft leading-relaxed mb-10">
               한권은 이 시간을 한 권의 책으로 남기는 서비스예요. 부모님과 한
-              시간 마주 앉아 35가지 질문을 나누면, 부모님의 말씀 하나하나를
+              시간 마주 앉아 이야기를 나누면, 부모님의 말씀 하나하나를
               소중히 담아 자연스러운 회고록으로 50페이지 분량의 책으로 만들어
               드립니다.
             </p>
@@ -54,7 +54,7 @@ export default function ParentsDayPage() {
               <ul className="space-y-2 text-sm text-ink-soft">
                 <li>
                   <strong className="text-ink">5월 1~6일</strong> · 부모님과
-                  마주 앉아 35가지 질문 인터뷰 (한 시간)
+                  마주 앉아 인터뷰 (한 시간)
                 </li>
                 <li>
                   <strong className="text-ink">5월 7일</strong> · 책으로
@@ -68,7 +68,7 @@ export default function ParentsDayPage() {
             </div>
 
             <h2 className="text-2xl font-bold mb-4 mt-12 leading-tight">
-              35가지 질문에서 부모님이 말씀해주시는 것들
+              부모님이 말씀해주시는 것들
             </h2>
             <p className="text-base text-ink-soft leading-relaxed mb-6">
               어린 시절 살던 집의 마당, 학창 시절 단짝 친구, 청년기의 첫사랑,

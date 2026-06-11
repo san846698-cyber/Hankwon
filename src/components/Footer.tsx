@@ -26,7 +26,7 @@ export default function Footer() {
           <div>
             <p className="eyebrow mb-5">가이드</p>
             <ul className="space-y-3 text-ink-soft">
-              <li><a href="/guides/questions-for-parents" className="hover:text-ink">35가지 질문</a></li>
+              <li><a href="/guides/questions-for-parents" className="hover:text-ink">부모님께 묻는 질문들</a></li>
               <li><a href="/guides/listening-to-parents" className="hover:text-ink">잘 듣는 법</a></li>
               <li><a href="/guides/memoir-writing" className="hover:text-ink">자서전 만드는 4가지 방법</a></li>
               <li><a href="/sample" className="hover:text-ink">책 샘플</a></li>

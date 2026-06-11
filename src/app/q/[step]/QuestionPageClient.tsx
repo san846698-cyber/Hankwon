@@ -11,6 +11,7 @@ type Props = { stepNum: number };
 export default function QuestionPageClient({ stepNum }: Props) {
   const [question, setQuestion] = useState<SessionQuestion | null>(null);
   const [total, setTotal] = useState(0);
+  const [mode, setMode] = useState<"self" | "other">("other");
   const [ready, setReady] = useState(false);
   const router = useRouter();
 
@@ -22,6 +23,8 @@ export default function QuestionPageClient({ stepNum }: Props) {
       router.replace("/");
       return;
     }
+
+    setMode(meta.mode);
 
     if (stepNum < 1 || stepNum > questions.length) {
       if (stepNum > questions.length) {
@@ -146,6 +149,7 @@ export default function QuestionPageClient({ stepNum }: Props) {
             questionId={question.id}
             isLast={isLast}
             totalQuestions={total}
+            mode={mode}
           />
         </div>
       </div>

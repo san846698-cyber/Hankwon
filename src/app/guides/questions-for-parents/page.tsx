@@ -4,9 +4,9 @@ import PageHero from "@/components/PageHero";
 import PageCTA from "@/components/PageCTA";
 
 export const metadata: Metadata = {
-  title: "부모님께 물어볼 35가지 질문 — 인생 인터뷰 가이드",
+  title: "부모님께 물어볼 질문 — 인생 인터뷰 가이드",
   description:
-    "부모님과 마주 앉아 어떤 질문을 드리면 좋을까요? 한권이 추천하는 35가지 인생 인터뷰 질문을 챕터별로 정리했습니다.",
+    "부모님과 마주 앉아 어떤 질문을 드리면 좋을까요? 한권이 추천하는 인생 인터뷰 질문을 챕터별로 정리했습니다.",
   alternates: { canonical: "/guides/questions-for-parents" },
 };
 
@@ -93,7 +93,7 @@ export default function QuestionsGuide() {
             <>
               부모님께 물어볼
               <br />
-              <span className="text-accent-dark">35가지 질문</span>
+              <span className="text-accent-dark">인생 질문들</span>
             </>
           }
           subtitle="평소엔 묻기 어렵지만, 한 번 물으면 평생 잊지 못할 이야기들"
@@ -103,9 +103,9 @@ export default function QuestionsGuide() {
           <div className="max-w-2xl mx-auto">
             <p className="text-base text-ink-soft leading-relaxed mb-6">
               부모님과 마주 앉아 인생 이야기를 듣고 싶은데, 막상 어떤 질문을
-              해야 할지 떠오르지 않으세요? 35가지 질문은 한권이 한국 부모님
+              해야 할지 떠오르지 않으세요? 한권의 질문들은 한국 부모님
               인터뷰에 가장 적합한 형태로 정리한 것입니다. 7개 챕터로 인생을
-              따라가며, 한 챕터당 4~6개의 질문을 자연스럽게 이어나갑니다.
+              따라가며, 한 챕터당 여러 질문을 자연스럽게 이어나갑니다.
             </p>
             <p className="text-base text-ink-soft leading-relaxed mb-10">
               아래 질문들을 그대로 사용하셔도 좋고, 한권에서 자녀가 진행하는
@@ -163,7 +163,7 @@ export default function QuestionsGuide() {
         </article>
 
         <PageCTA
-          title="35가지 질문, 한 권의 책으로"
+          title="부모님의 이야기를 한 권의 책으로"
           description="자녀가 받아 적은 답변을 자연스러운 회고록으로 정성껏 다듬어 드려요."
         />
       </main>

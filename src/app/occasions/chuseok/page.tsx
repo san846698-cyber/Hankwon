@@ -39,7 +39,7 @@ export default function ChuseokPage() {
             </p>
             <p className="text-base text-ink-soft leading-relaxed mb-10">
               한권은 그 한 시간을 한 권의 책으로 남기는 서비스예요. 자녀가
-              한권의 35가지 질문을 부모님께 들려드리고, 부모님 말씀을 받아
+              한권의 질문을 부모님께 들려드리고, 부모님 말씀을 받아
               적기만 하면 됩니다.
             </p>
 
@@ -65,7 +65,7 @@ export default function ChuseokPage() {
               명절에 듣기 좋은 부모님 이야기 10가지
             </h2>
             <p className="text-base text-ink-soft leading-relaxed mb-6">
-              한권의 35가지 질문 중, 명절 가족 모임에서 특히 자연스럽게 나누기
+              한권의 질문 중, 명절 가족 모임에서 특히 자연스럽게 나누기
               좋은 것들:
             </p>
             <ul className="space-y-3 text-base text-ink mb-10">

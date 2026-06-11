@@ -101,7 +101,7 @@ export default async function MilestonePage({ params }: Props) {
               {m.korean}에 부모님께 들을 수 있는 이야기
             </h2>
             <p className="text-base text-ink-soft leading-relaxed mb-6">
-              한권의 35가지 질문은 부모님 인생을 7개 챕터로 엮습니다:
+              한권의 질문들은 부모님 인생을 7개 챕터로 엮습니다:
             </p>
             <ul className="space-y-2 text-base text-ink mb-10 list-none">
               <li className="flex gap-3">

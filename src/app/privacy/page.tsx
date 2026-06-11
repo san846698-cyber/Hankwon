@@ -46,7 +46,7 @@ const SECTIONS = [
     body: (
       <p className="text-ink-soft">
         한권은 이용자의 답변 내용을 자서전 생성 외 어떤 목적으로도 제3자에게
-        제공하지 않습니다. AI 처리는 Anthropic Claude API를 통해 이루어지며,
+        제공하지 않습니다. 원고 생성 처리는 Anthropic Claude API를 통해 이루어지며,
         Anthropic은 API 호출 데이터를 모델 학습에 사용하지 않는다고 명시하고
         있습니다.
       </p>

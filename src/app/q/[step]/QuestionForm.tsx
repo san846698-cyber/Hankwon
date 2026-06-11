@@ -11,6 +11,7 @@ type Props = {
   questionId: number;
   isLast: boolean;
   totalQuestions: number;
+  mode: "self" | "other";
 };
 
 export default function QuestionForm({
@@ -18,6 +19,7 @@ export default function QuestionForm({
   questionId,
   isLast,
   totalQuestions,
+  mode,
 }: Props) {
   const [value, setValue] = useState("");
   const [hydrated, setHydrated] = useState(false);
@@ -116,7 +118,9 @@ export default function QuestionForm({
         ref={textareaRef}
         value={value}
         onChange={onChange}
-        placeholder="부모님의 답을 받아 적어주세요"
+        placeholder={
+          mode === "self" ? "답변을 적어주세요" : "부모님의 답을 받아 적어주세요"
+        }
         rows={6}
         className="fade-up fade-up-delay-3 w-full resize-none rounded-2xl bg-white/70 border border-beige-300 px-5 py-4 text-base leading-relaxed text-ink placeholder:text-ink-mute/60 focus:outline-none focus:border-ink focus:bg-white transition-colors mb-3"
         spellCheck={false}
