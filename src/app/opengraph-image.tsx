@@ -111,7 +111,7 @@ export default async function Image() {
             fontWeight: 400,
           }}
         >
-          35가지 질문 · 한 시간 · 한 권의 책으로 정성껏 엮어드려요
+          부모님의 이야기를 · 한 권의 책으로 · 정성껏 엮어드려요
         </div>
       </div>
     ),
