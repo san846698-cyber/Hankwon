@@ -146,7 +146,8 @@ export const QUESTIONS: Question[] = [
     chapterName: "학창 시절",
     questionIndex: 1,
     tier: "light",
-    textOther: "학교 다닐 때 선생님 눈에 어떤 학생으로 보이셨을 것 같으세요?",
+    textOther:
+      "학교 다닐 때 선생님이 어떤 학생으로 기억하셨을지 이야기해주세요.",
     textSelf: "학교 다닐 때 선생님이 나를 어떤 학생으로 기억했을지 이야기해주세요.",
     hint: "공부, 생활태도, 친구 관계 — 어떤 모습이든 좋아요.",
     prompts: [
