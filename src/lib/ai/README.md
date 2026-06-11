@@ -55,8 +55,8 @@ generateBook()
 병렬 호출:
   - 챕터 1~7 본문 (7회)
   - 책 제목·부제 (1회)
-  - 헌사 (1회, Q31/Q32/Q33 활용)
-  - closing (1회, Q35 활용)
+  - 헌사 (1회, Q38 + 보조 Q40 활용)
+  - closing (1회, Q41 → Q39/Q40 fallback 활용)
     ↓
 GeneratedBook 객체
     ↓

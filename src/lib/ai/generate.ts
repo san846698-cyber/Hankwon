@@ -84,6 +84,35 @@ async function callClaude(
   return text;
 }
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * callClaude with exponential backoff.
+ * 일시적 오류(429/5xx/네트워크)에 1~2회 재시도. 마지막 시도까지 실패하면 throw.
+ * 호출자(챕터/제목 등)는 throw를 catch해 graceful fallback으로 처리합니다.
+ */
+async function callClaudeWithRetry(
+  userPrompt: string,
+  options?: { maxTokens?: number; retries?: number },
+): Promise<string> {
+  const retries = options?.retries ?? 2;
+  let lastErr: unknown;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await callClaude(userPrompt, { maxTokens: options?.maxTokens });
+    } catch (err) {
+      lastErr = err;
+      if (attempt < retries) {
+        // 500ms → 1500ms → 4500ms (지수 백오프)
+        await sleep(500 * Math.pow(3, attempt));
+      }
+    }
+  }
+  throw lastErr instanceof Error
+    ? lastErr
+    : new Error("callClaude failed after retries");
+}
+
 function parseTitleJson(raw: string, fallback: { toLabel: string }): {
   title: string;
   subtitle: string;
@@ -162,29 +191,42 @@ export async function generateBook(
         mode,
         historicalContext: c.index === 6 ? historicalContext : undefined,
       });
-      const body = await callClaude(userPrompt);
-      return {
-        index: c.index,
-        name: c.name,
-        bodyMarkdown: body,
-      };
+      try {
+        const body = await callClaudeWithRetry(userPrompt);
+        return { index: c.index, name: c.name, bodyMarkdown: body };
+      } catch (err) {
+        // 재시도까지 실패 — 한 챕터 실패가 책 전체를 죽이지 않도록 graceful fallback.
+        // eslint-disable-next-line no-console
+        console.error(`[generateBook] chapter ${c.index} failed:`, err);
+        return {
+          index: c.index,
+          name: c.name,
+          bodyMarkdown: `## ${c.index}장 — ${c.name}\n\n이 장은 잠시 후 다시 생성됩니다.`,
+        };
+      }
     },
   );
 
   const titlePromise = (async () => {
-    const raw = await callClaude(buildTitlePrompt({ toLabel, answers }), {
-      maxTokens: 256,
-    });
-    return parseTitleJson(raw, { toLabel });
+    try {
+      const raw = await callClaudeWithRetry(
+        buildTitlePrompt({ toLabel, answers }),
+        { maxTokens: 256 },
+      );
+      return parseTitleJson(raw, { toLabel });
+    } catch {
+      // parseTitleJson과 동일한 fallback
+      return parseTitleJson("", { toLabel });
+    }
   })();
 
   const dedicationPromise = (async () => {
+    // 헌사 소스: Ch7 Q38(자녀에게 못 한 이야기) 우선, 보조 Q40.
     const closing: Record<string, string> = {};
-    if (answers["31"]?.trim()) closing["Q31"] = answers["31"];
-    if (answers["33"]?.trim()) closing["Q33"] = answers["33"];
-    if (answers["32"]?.trim()) closing["Q32"] = answers["32"];
+    if (answers["38"]?.trim()) closing["Q38"] = answers["38"];
+    if (answers["40"]?.trim()) closing["Q40"] = answers["40"];
 
-    const text = await callClaude(
+    const text = await callClaudeWithRetry(
       buildDedicationPrompt({ toLabel, closingAnswers: closing }),
       { maxTokens: 256 },
     );
@@ -192,8 +234,13 @@ export async function generateBook(
   })();
 
   const closingPromise = (async () => {
-    const text = await callClaude(
-      buildClosingPrompt({ toLabel, q35Answer: answers["35"] }),
+    // closing 소스: Q41(인생을 한 문장으로, premium 전용) 우선,
+    // 하위 티어는 Q39 → Q40 fallback.
+    const reflectionAnswer =
+      answers["41"]?.trim() || answers["39"]?.trim() || answers["40"]?.trim();
+
+    const text = await callClaudeWithRetry(
+      buildClosingPrompt({ toLabel, reflectionAnswer }),
       { maxTokens: 200 },
     );
     return text || undefined;
@@ -236,8 +283,8 @@ export async function generateChapterPreview(input: GenerateInput): Promise<{
   });
 
   const [chapterBody, titleResult] = await Promise.all([
-    callClaude(userPrompt),
-    callClaude(
+    callClaudeWithRetry(userPrompt),
+    callClaudeWithRetry(
       buildTitlePrompt({ toLabel: input.toLabel, answers: input.answers }),
       { maxTokens: 256 },
     ).then((raw) => parseTitleJson(raw, { toLabel: input.toLabel })),

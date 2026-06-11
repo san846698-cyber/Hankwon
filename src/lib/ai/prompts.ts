@@ -1,9 +1,11 @@
 import { QUESTIONS, type Question } from "@/data/questions";
 
+// 챕터 이름·설명은 src/data/questions.ts의 chapterName과 일치해야 합니다.
+// (실제 인터뷰에서 쓰인 챕터 = 책에 찍히는 챕터 제목)
 export const CHAPTERS = [
   {
     index: 1,
-    name: "어린 시절",
+    name: "뿌리와 어린 시절",
     description: "유년의 풍경과 가족, 첫 기억",
   },
   {
@@ -13,27 +15,27 @@ export const CHAPTERS = [
   },
   {
     index: 3,
-    name: "청년기와 첫사랑",
-    description: "독립과 사랑, 어른의 시작",
+    name: "청년기·사회 첫걸음",
+    description: "독립과 첫 사회생활, 어른의 시작",
   },
   {
     index: 4,
-    name: "결혼과 가정",
-    description: "배우자, 신혼, 가정을 이룬 일",
+    name: "사랑과 결혼",
+    description: "배우자를 만난 일, 신혼, 가정을 이룬 시간",
   },
   {
     index: 5,
-    name: "자녀 양육",
-    description: "자녀와의 시간, 부모로서의 마음",
+    name: "부모가 된 날",
+    description: "자녀의 탄생과 양육, 부모로서의 마음",
   },
   {
     index: 6,
-    name: "일과 성취",
-    description: "일과 자부심, 실패와 회복",
+    name: "내 인생의 굴곡",
+    description: "가장 힘들었던 시간, 시대를 통과한 경험, 후회와 회복",
   },
   {
     index: 7,
-    name: "지금, 그리고 앞으로",
+    name: "지금, 그리고 사랑하는 사람에게",
     description: "현재의 일상, 가족에게 남기는 말",
   },
 ] as const;
@@ -112,8 +114,11 @@ export const SYSTEM_PROMPT = `당신은 한국의 가족 자서전을 정성껏 
 
 ## 화법과 시점
 
-- **3인칭 회고록**으로 작성하세요. "엄마는 다섯 살 때, 외할머니의 부엌에서..."
-- 부모님 호칭은 사용자가 지정한 호칭을 그대로 사용하세요.
+- **시점(1인칭/3인칭)은 각 요청의 작성 규칙에서 지정합니다. 그 지시를 최우선으로 따르세요.**
+  - 3인칭일 때: 지정된 호칭으로 회고. "엄마는 다섯 살 때, 외할머니의 부엌에서..."
+  - 1인칭일 때: "나는 다섯 살 때, 외할머니의 부엌에서..." — 호칭 없이 '나'로 회고.
+  - (아래 예시는 3인칭 기준입니다. 요청이 1인칭이면 같은 원칙을 1인칭으로 적용하세요.)
+- 부모님 호칭은 사용자가 지정한 호칭을 그대로 사용하세요. (1인칭 작성 시에는 호칭 대신 '나')
   ({엄마}, {아빠}, {어머니}, {아버지}, {할머니}, {할아버지}, {엄니}, {아부지} 등)
 - 자녀나 가족이 답변에 등장할 때는 답변에 나온 호칭을 그대로 사용하세요.
 - **시제**: 과거 사건은 과거형. "지금" 부모님의 마음을 묘사할 때는 현재형.
@@ -246,7 +251,8 @@ ${x.a}
 
   const isSelf = args.mode === "self";
   const perspectiveRule = isSelf
-    ? `- 1인칭 시점으로 작성하세요. "나는...", "나의..." — ${args.toLabel}이라는 호칭 없이 1인칭 회고록 산문으로.`
+    ? `- **1인칭 시점으로 작성하세요. "나는...", "나의..." — ${args.toLabel}이라는 호칭 없이 1인칭 회고록 산문으로.**
+  (이 1인칭 지시는 시스템 프롬프트의 3인칭 예시보다 우선합니다. 3인칭으로 쓰지 마세요.)`
     : `- ${args.toLabel}을 3인칭으로 부르세요 ("${args.toLabel}은...", "${args.toLabel}의...").`;
 
   const styleInstruction =
@@ -324,7 +330,8 @@ JSON으로만 출력하세요. 다른 텍스트나 코드블록 없이:
 
 /**
  * 책 첫 장 헌사 페이지 — 부모님이 자녀/가족에게 보내는 짧은 헌사.
- * 부모님 답변(특히 Q31, Q33)에서 자녀에게 전하는 메시지를 다듬어 만듭니다.
+ * Ch7 답변(Q38 "자녀에게 차마 못 한 이야기", 보조 Q40)에서
+ * 자녀에게 전하는 메시지를 다듬어 만듭니다.
  */
 export function buildDedicationPrompt(args: {
   toLabel: string;
@@ -360,15 +367,16 @@ ${closingText}
 
 /**
  * 책 마지막 페이지 closing 메시지.
- * Q35(인생을 다시 산다면)의 답변을 바탕으로 책을 닫는 한두 줄.
+ * Ch7 답변(Q41 "내 인생을 한 문장으로", 하위 티어는 Q39/Q40 fallback)을
+ * 바탕으로 책을 닫는 한두 줄.
  */
 export function buildClosingPrompt(args: {
   toLabel: string;
-  q35Answer?: string;
+  reflectionAnswer?: string;
 }): string {
-  const q35 = args.q35Answer?.trim();
+  const reflection = args.reflectionAnswer?.trim();
 
-  if (!q35) {
+  if (!reflection) {
     return `${args.toLabel}의 자서전 마지막 페이지를 닫는 짧은 한 줄을 만들어 주세요.
 
 요구사항:
@@ -379,9 +387,9 @@ export function buildClosingPrompt(args: {
 
   return `${args.toLabel}의 자서전 마지막 페이지에 들어갈 closing 한두 줄을 만들어 주세요.
 
-${args.toLabel}의 답변 (Q35 — 인생을 다시 산다면):
+${args.toLabel}이 인생을 돌아보며 남긴 답변:
 """
-${q35}
+${reflection}
 """
 
 요구사항:
