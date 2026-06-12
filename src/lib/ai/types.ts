@@ -18,6 +18,7 @@ export type GenerateInput = {
   answers: Record<string, string>;
   mode?: "self" | "other";
   style?: "simple" | "rich";
+  person?: "first" | "third";
   introData?: {
     historicalEvents?: string[];
     [key: string]: unknown;

@@ -98,6 +98,7 @@ export async function POST(req: NextRequest) {
       answers: answersAsRecord(stored.answers),
       mode: stored.response.mode ?? "other",
       style: stored.response.style ?? "simple",
+      person: stored.response.person ?? "third",
       introData: stored.response.intro_data ?? undefined,
     });
 

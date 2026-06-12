@@ -15,12 +15,18 @@ create table if not exists public.responses (
   tier         text check (tier in ('light', 'standard', 'premium')),
   intro_data   jsonb,
   style        text check (style in ('simple', 'rich')),
+  person       text check (person in ('first', 'third')) default 'third',
   status       text not null default 'in_progress'
                  check (status in ('in_progress', 'completed', 'paid', 'generated')),
   created_at   timestamptz not null default now(),
   completed_at timestamptz,
   paid_at      timestamptz
 );
+
+-- Migration for existing databases (idempotent): add person if missing.
+alter table public.responses
+  add column if not exists person text
+    check (person in ('first', 'third')) default 'third';
 
 create index if not exists responses_slug_idx   on public.responses (slug);
 create index if not exists responses_status_idx on public.responses (status);

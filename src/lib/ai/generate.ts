@@ -164,7 +164,7 @@ export async function generateBook(
 ): Promise<GeneratedBook> {
   const { toLabel, answers } = input;
 
-  const { mode, style, introData } = input;
+  const { mode, style, person, introData } = input;
 
   // Build historical context string for Ch.6 if user has historical events
   const HISTORICAL_LABELS: Record<string, string> = {
@@ -188,6 +188,7 @@ export async function generateBook(
         chapterIndex: c.index,
         answers,
         style,
+        person,
         mode,
         historicalContext: c.index === 6 ? historicalContext : undefined,
       });

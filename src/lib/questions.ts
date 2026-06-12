@@ -26,6 +26,7 @@ export type HankwonMeta = {
   responseId: string | null;
   slug: string | null;
   style?: "simple" | "rich";
+  person?: "first" | "third";
 };
 
 export const META_KEY = "hankwon:meta";
@@ -93,6 +94,7 @@ export function readMeta(): HankwonMeta | null {
       responseId: parsed.responseId ?? null,
       slug: parsed.slug ?? null,
       style: parsed.style,
+      person: parsed.person,
     };
   } catch {
     return null;

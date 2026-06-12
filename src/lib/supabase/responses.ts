@@ -12,6 +12,7 @@ export type ResponseRow = {
   tier: string | null;
   intro_data: Record<string, unknown> | null;
   style: "simple" | "rich" | null;
+  person: "first" | "third" | null;
   status: "in_progress" | "completed" | "paid" | "generated";
   created_at: string;
   completed_at: string | null;
@@ -69,11 +70,13 @@ export async function updateResponseMeta(args: {
   responseId: string;
   introData?: Record<string, unknown>;
   style?: "simple" | "rich";
+  person?: "first" | "third";
 }): Promise<void> {
   const supabase = getSupabaseServerClient();
   const updates: Record<string, unknown> = {};
   if (args.introData !== undefined) updates.intro_data = args.introData;
   if (args.style !== undefined) updates.style = args.style;
+  if (args.person !== undefined) updates.person = args.person;
   if (Object.keys(updates).length === 0) return;
 
   const { error } = await supabase

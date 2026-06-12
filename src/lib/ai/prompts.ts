@@ -208,8 +208,9 @@ export function getQuestionsForChapter(chapterIndex: number): Question[] {
 /**
  * 한 챕터 분량 본문을 만들기 위한 사용자 프롬프트.
  *
- * style: 'simple' = 담백하게, 'rich' = 풍성하게
- * mode:  'other'  = 3인칭 (엄마는...), 'self' = 1인칭 (나는...)
+ * style:  'simple' = 담백하게, 'rich' = 풍성하게
+ * person: 'first' = 1인칭 (나는…), 'third' = 3인칭 (어머니는…). 미지정 시 mode로 폴백.
+ * mode:   인터뷰 방식 (self/other). person 미지정 시 self→1인칭, other→3인칭 폴백.
  * historicalContext: Ch.6 전용, 체크한 시대적 경험 요약
  */
 export function buildChapterPrompt(args: {
@@ -217,6 +218,7 @@ export function buildChapterPrompt(args: {
   chapterIndex: number;
   answers: Record<string, string>;
   style?: "simple" | "rich";
+  person?: "first" | "third";
   mode?: "self" | "other";
   historicalContext?: string;
 }): string {
@@ -249,11 +251,13 @@ ${x.a}
     )
     .join("\n\n---\n\n");
 
-  const isSelf = args.mode === "self";
-  const perspectiveRule = isSelf
-    ? `- **1인칭 시점으로 작성하세요. "나는...", "나의..." — ${args.toLabel}이라는 호칭 없이 1인칭 회고록 산문으로.**
+  // 인칭은 person이 우선. 미지정이면 mode로 폴백(self→1인칭, other→3인칭).
+  const person = args.person ?? (args.mode === "self" ? "first" : "third");
+  const isFirst = person === "first";
+  const perspectiveRule = isFirst
+    ? `- **1인칭 시점으로 작성하세요. "나는...", "내가...", "나의..." — ${args.toLabel} 같은 호칭 없이 1인칭 회고록 산문으로.**
   (이 1인칭 지시는 시스템 프롬프트의 3인칭 예시보다 우선합니다. 3인칭으로 쓰지 마세요.)`
-    : `- ${args.toLabel}을 3인칭으로 부르세요 ("${args.toLabel}은...", "${args.toLabel}의...").`;
+    : `- ${args.toLabel}을 3인칭으로 부르세요 ("${args.toLabel}은...", "${args.toLabel}의..."). '나'로 쓰지 마세요.`;
 
   const styleInstruction =
     args.style === "rich"
@@ -264,7 +268,7 @@ ${x.a}
     ? `\n참고 (시대적 경험): ${args.historicalContext}. 답변에 관련 내용이 있다면 적절히 맥락으로 활용해주세요 (없는 내용 추가 금지).`
     : "";
 
-  return `다음은 [${chapter.index}장 — ${chapter.name}] 챕터를 위한 ${isSelf ? "나의" : `${args.toLabel}의`} 인터뷰 답변입니다.
+  return `다음은 [${chapter.index}장 — ${chapter.name}] 챕터를 위한 ${isFirst ? "나의" : `${args.toLabel}의`} 인터뷰 답변입니다.
 이 답변들을 바탕으로 책의 ${chapter.index}장 본문을 작성해 주세요.
 
 답변자 호칭: ${args.toLabel}

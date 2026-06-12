@@ -8,6 +8,7 @@ import { trackEvent } from "@/lib/analytics";
 type Props = { plan: Plan };
 
 type StyleOption = "simple" | "rich";
+type PersonOption = "first" | "third";
 
 const STYLE_OPTIONS: {
   id: StyleOption;
@@ -26,10 +27,31 @@ const STYLE_OPTIONS: {
   },
 ];
 
+const PERSON_OPTIONS: {
+  id: PersonOption;
+  label: string;
+  sample: string;
+  desc: string;
+}[] = [
+  {
+    id: "first",
+    label: "1인칭",
+    sample: "“나는 1958년 경상도에서 태어났다…”",
+    desc: "부모님 목소리로 직접 쓴 느낌",
+  },
+  {
+    id: "third",
+    label: "3인칭",
+    sample: "“어머니는 1958년 경상도에서 태어나셨다…”",
+    desc: "자녀가 부모님 이야기를 전하는 느낌",
+  },
+];
+
 export default function BuyForm({ plan }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [style, setStyle] = useState<StyleOption>("simple");
+  const [person, setPerson] = useState<PersonOption>("third");
 
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistDone, setWaitlistDone] = useState(false);
@@ -39,30 +61,54 @@ export default function BuyForm({ plan }: Props) {
 
   useEffect(() => {
     trackEvent("buy_viewed");
-    // Persist style choice to sessionStorage
+    // Restore previous style/person choice from sessionStorage
     try {
       const metaRaw = sessionStorage.getItem(META_KEY);
       if (metaRaw) {
         const meta = JSON.parse(metaRaw) as Record<string, unknown>;
         if (meta.style) setStyle(meta.style as StyleOption);
+        if (meta.person) setPerson(meta.person as PersonOption);
       }
     } catch {
       // ignore
     }
   }, []);
 
-  function onStyleChange(s: StyleOption) {
-    setStyle(s);
+  /**
+   * Persist style/person to sessionStorage AND the responses row (PATCH).
+   * The webhook reads these from the DB row at generation time, so they must
+   * be stored server-side — not just in sessionStorage.
+   */
+  function persistMeta(patch: { style?: StyleOption; person?: PersonOption }) {
+    let responseId: string | null = null;
     try {
       const metaRaw = sessionStorage.getItem(META_KEY);
       if (metaRaw) {
         const meta = JSON.parse(metaRaw) as Record<string, unknown>;
-        meta.style = s;
+        Object.assign(meta, patch);
         sessionStorage.setItem(META_KEY, JSON.stringify(meta));
+        responseId = (meta.responseId as string | null) ?? null;
       }
     } catch {
       // ignore
     }
+    if (responseId) {
+      fetch("/api/response", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ responseId, ...patch }),
+      }).catch(() => {});
+    }
+  }
+
+  function onStyleChange(s: StyleOption) {
+    setStyle(s);
+    persistMeta({ style: s });
+  }
+
+  function onPersonChange(p: PersonOption) {
+    setPerson(p);
+    persistMeta({ person: p });
   }
 
   async function onPay() {
@@ -86,13 +132,18 @@ export default function BuyForm({ plan }: Props) {
       // ignore
     }
 
-    trackEvent("pay_attempted", { plan: plan.id, amount: plan.price, style });
+    trackEvent("pay_attempted", {
+      plan: plan.id,
+      amount: plan.price,
+      style,
+      person,
+    });
 
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, slug, style, tier }),
+        body: JSON.stringify({ name, email, slug, style, tier, person }),
       });
       const data = (await res.json()) as
         | { configured: true; url: string }
@@ -108,7 +159,7 @@ export default function BuyForm({ plan }: Props) {
         return;
       }
       alert(
-        `결제 연동 전 mock입니다.\n\n선택: ${plan.title}\n금액: ₩${plan.price.toLocaleString("ko-KR")}\n받으실 분: ${name}\n이메일: ${email}\n문체: ${style}\n\n키 설정 후 실제 결제로 전환됩니다.`,
+        `결제 연동 전 mock입니다.\n\n선택: ${plan.title}\n금액: ₩${plan.price.toLocaleString("ko-KR")}\n받으실 분: ${name}\n이메일: ${email}\n문체: ${style}\n인칭: ${person === "first" ? "1인칭" : "3인칭"}\n\n키 설정 후 실제 결제로 전환됩니다.`,
       );
       window.location.href = data.mockUrl;
     } catch (err) {
@@ -240,6 +291,45 @@ export default function BuyForm({ plan }: Props) {
                     {opt.label}
                   </p>
                   <p className={`text-xs leading-relaxed ${style === opt.id ? "text-beige-100/70" : "text-ink-mute"}`}>
+                    {opt.desc}
+                  </p>
+                </div>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Person (narration perspective) selection */}
+        <div className="mb-9">
+          <p className="font-display text-base text-ink mb-4" style={{ fontWeight: 700 }}>
+            인칭 선택
+          </p>
+          <div className="space-y-2.5">
+            {PERSON_OPTIONS.map((opt) => (
+              <label
+                key={opt.id}
+                className={`flex items-start gap-4 rounded-2xl border px-5 py-4 cursor-pointer transition-all ${
+                  person === opt.id
+                    ? "bg-ink text-beige-100 border-ink"
+                    : "bg-white/60 border-beige-300 hover:border-ink-mute hover:bg-white"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="person"
+                  value={opt.id}
+                  checked={person === opt.id}
+                  onChange={() => onPersonChange(opt.id)}
+                  className="mt-0.5 accent-ink"
+                />
+                <div>
+                  <p className={`font-display text-sm mb-0.5 ${person === opt.id ? "text-beige-100" : "text-ink"}`} style={{ fontWeight: 700 }}>
+                    {opt.label}
+                  </p>
+                  <p className={`text-sm mb-1 leading-relaxed ${person === opt.id ? "text-beige-100/90" : "text-ink-soft"}`}>
+                    {opt.sample}
+                  </p>
+                  <p className={`text-xs leading-relaxed ${person === opt.id ? "text-beige-100/70" : "text-ink-mute"}`}>
                     {opt.desc}
                   </p>
                 </div>

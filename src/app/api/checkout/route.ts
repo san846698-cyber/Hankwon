@@ -8,6 +8,11 @@ type Body = {
   name?: string;
   email?: string;
   slug?: string;
+  // style/tier/person are persisted to the responses row via /api/response (PATCH).
+  // Accepted here for completeness; the webhook reads them from the DB row.
+  style?: "simple" | "rich";
+  tier?: string;
+  person?: "first" | "third";
 };
 
 export async function POST(req: NextRequest) {

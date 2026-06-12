@@ -11,6 +11,7 @@ type Body = {
   answers?: Record<string, string>;
   mode?: "self" | "other";
   style?: "simple" | "rich";
+  person?: "first" | "third";
   introData?: GenerateInput["introData"];
 };
 
@@ -51,13 +52,21 @@ export async function POST(req: NextRequest) {
   // to the generateBook defaults (other / simple / no historical context).
   const mode = body.mode === "self" ? "self" : "other";
   const style = body.style === "rich" ? "rich" : "simple";
+  const person = body.person === "first" ? "first" : "third";
   const introData =
     body.introData && typeof body.introData === "object"
       ? body.introData
       : undefined;
 
   try {
-    const book = await generateBook({ toLabel, answers, mode, style, introData });
+    const book = await generateBook({
+      toLabel,
+      answers,
+      mode,
+      style,
+      person,
+      introData,
+    });
     return NextResponse.json({ book });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Unknown error";

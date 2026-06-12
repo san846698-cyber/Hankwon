@@ -60,6 +60,7 @@ type AnswerBody = {
   done?: boolean;
   introData?: Record<string, unknown>;
   style?: "simple" | "rich";
+  person?: "first" | "third";
 };
 
 export async function PATCH(req: NextRequest) {
@@ -74,7 +75,8 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
-  const { responseId, questionId, content, done, introData, style } = body;
+  const { responseId, questionId, content, done, introData, style, person } =
+    body;
   if (!responseId) {
     return NextResponse.json({ error: "Missing responseId" }, { status: 400 });
   }
@@ -83,8 +85,8 @@ export async function PATCH(req: NextRequest) {
     if (typeof questionId === "number" && typeof content === "string") {
       await upsertAnswer({ responseId, questionId, content });
     }
-    if (introData || style) {
-      await updateResponseMeta({ responseId, introData, style });
+    if (introData || style || person) {
+      await updateResponseMeta({ responseId, introData, style, person });
     }
     if (done) {
       await completeResponse(responseId);
