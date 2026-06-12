@@ -124,6 +124,7 @@ alter table public.print_waitlist enable row level security;
 alter table public.products      enable row level security;
 
 -- Products: public read
+drop policy if exists "products_public_read" on public.products;
 create policy "products_public_read" on public.products
   for select using (active = true);
 
