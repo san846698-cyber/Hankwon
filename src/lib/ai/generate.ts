@@ -281,6 +281,9 @@ export async function generateChapterPreview(input: GenerateInput): Promise<{
     toLabel: input.toLabel,
     chapterIndex: 1,
     answers: input.answers,
+    style: input.style,
+    person: input.person,
+    mode: input.mode,
   });
 
   const [chapterBody, titleResult] = await Promise.all([

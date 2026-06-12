@@ -61,17 +61,29 @@ export default function BuyForm({ plan }: Props) {
 
   useEffect(() => {
     trackEvent("buy_viewed");
-    // Restore previous style/person choice from sessionStorage
+    // Restore previous style/person choice from sessionStorage.
     try {
       const metaRaw = sessionStorage.getItem(META_KEY);
       if (metaRaw) {
         const meta = JSON.parse(metaRaw) as Record<string, unknown>;
         if (meta.style) setStyle(meta.style as StyleOption);
-        if (meta.person) setPerson(meta.person as PersonOption);
+        if (meta.person) {
+          // User already chose explicitly — honor it.
+          setPerson(meta.person as PersonOption);
+        } else {
+          // No explicit choice yet: default by interview mode.
+          // self(부모님 본인 작성) → 1인칭, other(자녀 인터뷰) → 3인칭.
+          const derived: PersonOption =
+            meta.mode === "self" ? "first" : "third";
+          setPerson(derived);
+          // Persist the derived default so the DB row (and webhook) reflect it.
+          persistMeta({ person: derived });
+        }
       }
     } catch {
       // ignore
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**

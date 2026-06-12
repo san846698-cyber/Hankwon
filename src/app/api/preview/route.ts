@@ -9,6 +9,9 @@ export const maxDuration = 60;
 type Body = {
   toLabel?: string;
   answers?: Record<string, string>;
+  person?: "first" | "third";
+  style?: "simple" | "rich";
+  mode?: "self" | "other";
 };
 
 /**
@@ -31,9 +34,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing toLabel" }, { status: 400 });
   }
 
+  const person = body.person === "first" ? "first" : "third";
+  const style = body.style === "rich" ? "rich" : "simple";
+  const mode = body.mode === "self" ? "self" : "other";
+
   if (features.hasAnthropic()) {
     try {
-      const result = await generateChapterPreview({ toLabel, answers });
+      const result = await generateChapterPreview({
+        toLabel,
+        answers,
+        person,
+        style,
+        mode,
+      });
       // Convert markdown body to paragraphs for client uniformity.
       const paragraphs = result.bodyMarkdown
         .split(/\n{2,}/)
