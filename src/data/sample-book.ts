@@ -22,11 +22,11 @@ export const SAMPLE_BOOK: BookPageData[] = [
     entries: [
       { num: "1장", title: "어린 시절" },
       { num: "2장", title: "학창 시절" },
-      { num: "3장", title: "청년기와 첫사랑" },
-      { num: "4장", title: "결혼과 가정" },
-      { num: "5장", title: "자녀 양육" },
-      { num: "6장", title: "일과 성취" },
-      { num: "7장", title: "지금, 그리고 앞으로" },
+      { num: "3장", title: "청년기·사회 첫걸음" },
+      { num: "4장", title: "사랑과 결혼" },
+      { num: "5장", title: "부모가 된 날" },
+      { num: "6장", title: "내 인생의 굴곡" },
+      { num: "7장", title: "지금, 그리고 사랑하는 사람에게" },
     ],
   },
   { kind: "chapter", num: "1장", title: "어린 시절" },
@@ -44,7 +44,7 @@ export const SAMPLE_BOOK: BookPageData[] = [
       "여름이면 그 살구가 익어 가지가 휘었다. 동네 아이들이 다 모여 살구를 따 먹었다고 한다. 엄마는 그 시절을 떠올릴 때면 입에 단맛이 도는 것 같다고 했다.",
     ],
   },
-  { kind: "chapter", num: "3장", title: "청년기와 첫사랑" },
+  { kind: "chapter", num: "3장", title: "청년기·사회 첫걸음" },
   {
     kind: "body",
     paragraphs: [
@@ -52,7 +52,7 @@ export const SAMPLE_BOOK: BookPageData[] = [
       "그 시절 엄마는 매주 금요일이면 명동 서점에 들렀다. 한 권 두 권 사 모은 책들이 자취방의 작은 책장을 채워갔다. 그곳에서 엄마는 첫 친구를 만났다.",
     ],
   },
-  { kind: "chapter", num: "5장", title: "자녀 양육" },
+  { kind: "chapter", num: "5장", title: "부모가 된 날" },
   {
     kind: "body",
     paragraphs: [

@@ -32,7 +32,7 @@ const QUESTION_GROUPS = [
     ],
   },
   {
-    chapter: "청년기와 첫사랑",
+    chapter: "청년기·사회 첫걸음",
     questions: [
       "첫사랑이 누구였는지, 어떻게 시작되고 끝났는지 들려주세요.",
       "20대에 가장 무모했던 결정 한 가지는요?",
@@ -42,7 +42,7 @@ const QUESTION_GROUPS = [
     ],
   },
   {
-    chapter: "결혼과 가정",
+    chapter: "사랑과 결혼",
     questions: [
       "배우자를 처음 본 날의 기억을 말씀해 주세요.",
       "결혼식 날 가장 기억에 남는 장면은요?",
@@ -52,7 +52,7 @@ const QUESTION_GROUPS = [
     ],
   },
   {
-    chapter: "자녀 양육",
+    chapter: "부모가 된 날",
     questions: [
       "자녀가 태어난 날의 병원, 날씨, 그날의 마음을 들려주세요.",
       "아이를 키우며 가장 행복했던 일상의 한 장면은요?",
@@ -62,7 +62,7 @@ const QUESTION_GROUPS = [
     ],
   },
   {
-    chapter: "일과 성취",
+    chapter: "내 인생의 굴곡",
     questions: [
       "인생에서 가장 자랑스러운 일 한 가지를 꼽는다면요?",
       "가장 큰 실패와, 그것을 어떻게 견뎌냈나요?",
@@ -71,7 +71,7 @@ const QUESTION_GROUPS = [
     ],
   },
   {
-    chapter: "지금, 그리고 앞으로",
+    chapter: "지금, 그리고 사랑하는 사람에게",
     questions: [
       "지금 가장 소중하게 여기는 일상의 작은 즐거움은요?",
       "자녀에게 꼭 전하고 싶지만 평소엔 말하지 못한 말이 있다면요?",

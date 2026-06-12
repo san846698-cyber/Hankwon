@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { generateBook } from "@/lib/ai/generate";
+import type { GenerateInput } from "@/lib/ai/types";
 import { features } from "@/lib/features";
 
 export const runtime = "nodejs";
@@ -8,6 +9,9 @@ export const maxDuration = 120;
 type Body = {
   toLabel?: string;
   answers?: Record<string, string>;
+  mode?: "self" | "other";
+  style?: "simple" | "rich";
+  introData?: GenerateInput["introData"];
 };
 
 export async function POST(req: NextRequest) {
@@ -43,8 +47,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Optional params — same shape as the webhook path. Invalid values fall back
+  // to the generateBook defaults (other / simple / no historical context).
+  const mode = body.mode === "self" ? "self" : "other";
+  const style = body.style === "rich" ? "rich" : "simple";
+  const introData =
+    body.introData && typeof body.introData === "object"
+      ? body.introData
+      : undefined;
+
   try {
-    const book = await generateBook({ toLabel, answers });
+    const book = await generateBook({ toLabel, answers, mode, style, introData });
     return NextResponse.json({ book });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Unknown error";

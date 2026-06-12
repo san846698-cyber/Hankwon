@@ -114,23 +114,23 @@ export default async function MilestonePage({ params }: Props) {
               </li>
               <li className="flex gap-3">
                 <span className="text-accent-dark font-bold w-12 shrink-0">3장</span>
-                청년기와 첫사랑 — 첫사랑, 무모했던 결정, 첫 직장 출근날
+                청년기·사회 첫걸음 — 첫사랑, 무모했던 결정, 첫 직장 출근날
               </li>
               <li className="flex gap-3">
                 <span className="text-accent-dark font-bold w-12 shrink-0">4장</span>
-                결혼과 가정 — 배우자 첫 만남, 신혼집, 부부싸움 후 화해
+                사랑과 결혼 — 배우자 첫 만남, 신혼집, 부부싸움 후 화해
               </li>
               <li className="flex gap-3">
                 <span className="text-accent-dark font-bold w-12 shrink-0">5장</span>
-                자녀 양육 — 자녀 태어난 날, 가장 행복했던 일상, 가장 자랑스러운 순간
+                부모가 된 날 — 자녀 태어난 날, 가장 행복했던 일상, 가장 자랑스러운 순간
               </li>
               <li className="flex gap-3">
                 <span className="text-accent-dark font-bold w-12 shrink-0">6장</span>
-                일과 성취 — 가장 자랑스러운 일, 가장 큰 실패, 잊을 수 없는 사람
+                내 인생의 굴곡 — 가장 힘들었던 시간, 그것을 버티게 한 것, 잊을 수 없는 사람
               </li>
               <li className="flex gap-3">
                 <span className="text-accent-dark font-bold w-12 shrink-0">7장</span>
-                지금, 그리고 앞으로 — 일상의 즐거움, 자녀에게 못 한 말, 손주에게
+                지금, 그리고 사랑하는 사람에게 — 일상의 즐거움, 자녀에게 못 한 말, 손주에게
                 전하고 싶은 것
               </li>
             </ul>
