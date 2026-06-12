@@ -9,6 +9,11 @@ import { sendEmail } from "@/lib/email/send";
 import { receiptEmailHtml } from "@/lib/emails/receipt";
 import { bookReadyEmailHtml } from "@/lib/emails/book-ready";
 import { getResponseBySlug, answersAsRecord } from "@/lib/supabase/responses";
+import {
+  saveBook,
+  hasBookForOrder,
+  markResponseStatus,
+} from "@/lib/supabase/books";
 
 export const runtime = "nodejs";
 export const maxDuration = 300; // book generation + PDF can be slow
@@ -19,10 +24,12 @@ export const maxDuration = 300; // book generation + PDF can be slow
  * Flow on `order_created`:
  *   1. verify signature
  *   2. read slug from custom_data → look up answers in Supabase
- *   3. send receipt email immediately
- *   4. generate book → render PDF → email PDF
+ *   3. idempotency: skip if this order already produced a book
+ *   4. send receipt email (with real to_label) → status 'paid'
+ *   5. generate book → save to books table → status 'generated'
+ *   6. render PDF → email PDF
  *
- * Steps 4 should ideally run in a background queue (Inngest, QStash, etc.)
+ * Steps 5–6 should ideally run in a background queue (Inngest, QStash, etc.)
  * but for Phase 0.5 we let the webhook block until done. LS retries on 5xx.
  */
 export async function POST(req: NextRequest) {
@@ -57,6 +64,34 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Look up the stored response first — the receipt email needs the real
+  // to_label, and the idempotency check needs Supabase anyway.
+  let stored: Awaited<ReturnType<typeof getResponseBySlug>> = null;
+  if (slug) {
+    try {
+      stored = await getResponseBySlug(slug);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("[webhook] response lookup failed:", err);
+    }
+  }
+
+  // Idempotency — LS retries on 5xx/timeout. If this order already produced
+  // a book, don't generate or email again.
+  if (stored) {
+    try {
+      if (await hasBookForOrder(orderId)) {
+        return NextResponse.json({
+          received: true,
+          note: `Order ${orderId} already processed`,
+        });
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("[webhook] idempotency check failed:", err);
+    }
+  }
+
   // Receipt email — fire immediately so user sees confirmation.
   try {
     await sendEmail({
@@ -65,7 +100,7 @@ export async function POST(req: NextRequest) {
       html: receiptEmailHtml({
         recipientName: customerName,
         recipientEmail: email,
-        toLabel: "부모님",
+        toLabel: stored?.response.to_label ?? "부모님",
         amount: Math.round(totalCents / 100),
         orderId,
         paidAt: new Date(),
@@ -83,13 +118,19 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // Look up answers from Supabase, generate book, render PDF, email.
+  // Generate book, save it, render PDF, email.
   try {
-    const stored = await getResponseBySlug(slug);
     if (!stored) {
       // eslint-disable-next-line no-console
       console.error(`[webhook] no response found for slug=${slug}`);
       return NextResponse.json({ received: true, note: "Response not found" });
+    }
+
+    try {
+      await markResponseStatus(stored.response.id, "paid");
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("[webhook] status→paid failed:", err);
     }
 
     const book = await generateBook({
@@ -101,6 +142,15 @@ export async function POST(req: NextRequest) {
       person: stored.response.person ?? "third",
       introData: stored.response.intro_data ?? undefined,
     });
+
+    // Save before PDF/email so the share link works even if a later step fails.
+    try {
+      await saveBook({ responseId: stored.response.id, orderId, book });
+      await markResponseStatus(stored.response.id, "generated");
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("[webhook] book save failed:", err);
+    }
 
     const pdf = await renderBookToPdf(book);
 

@@ -48,11 +48,23 @@ create table if not exists public.books (
   id           uuid primary key default gen_random_uuid(),
   response_id  uuid not null unique references public.responses(id) on delete cascade,
   title        text,
+  subtitle     text,
   body_md      text,
+  book_json    jsonb,
   pdf_url      text,
+  order_id     text,
   generated_at timestamptz,
   created_at   timestamptz not null default now()
 );
+
+-- Migration for existing databases (idempotent).
+alter table public.books add column if not exists subtitle  text;
+alter table public.books add column if not exists book_json jsonb;
+alter table public.books add column if not exists order_id  text;
+
+-- order_id is the LemonSqueezy order id — used for webhook idempotency.
+create unique index if not exists books_order_id_idx
+  on public.books (order_id) where order_id is not null;
 
 -- Print waitlist
 create table if not exists public.print_waitlist (

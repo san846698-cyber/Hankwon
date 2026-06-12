@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { features } from "@/lib/features";
+import { getBookBySlug } from "@/lib/supabase/books";
+import { parseChapterMarkdown } from "@/lib/pdf/parse";
+import type { GeneratedBook } from "@/lib/ai/types";
 
 export const metadata: Metadata = {
   title: "한 권 미리보기",
@@ -14,8 +18,93 @@ type Props = {
 export default async function BookPage({ params, searchParams }: Props) {
   const { slug } = await params;
   const sp = await searchParams;
-  const toLabel = (sp.to ?? "엄마").trim() || "엄마";
 
+  // 생성된 책이 있으면 진짜 책을, 없으면 결제 유도용 미리보기를 보여준다.
+  let generated: { book: GeneratedBook; toLabel: string } | null = null;
+  if (features.hasSupabase()) {
+    try {
+      generated = await getBookBySlug(slug);
+    } catch {
+      // Supabase 미설정/조회 실패 → 미리보기 fallback
+    }
+  }
+
+  if (generated) {
+    return <FullBook book={generated.book} toLabel={generated.toLabel} />;
+  }
+
+  const toLabel = (sp.to ?? "엄마").trim() || "엄마";
+  return <PreviewFallback slug={slug} toLabel={toLabel} />;
+}
+
+function FullBook({ book, toLabel }: { book: GeneratedBook; toLabel: string }) {
+  const chapters = book.chapters
+    .slice()
+    .sort((a, b) => a.index - b.index)
+    .map((c) => ({ ...c, parsed: parseChapterMarkdown(c.bodyMarkdown) }));
+
+  return (
+    <main className="min-h-dvh bg-beige px-6 py-10">
+      <div className="max-w-md mx-auto">
+        <p className="fade-up text-sm tracking-[0.2em] text-accent font-semibold text-center mb-3">
+          {toLabel}의 한 권
+        </p>
+
+        {/* 표지 */}
+        <header className="fade-up fade-up-delay-1 text-center mb-10">
+          <h1 className="text-parent-2xl font-semibold leading-tight mb-2">
+            {book.title}
+          </h1>
+          <p className="text-sm text-ink-mute">{book.subtitle}</p>
+        </header>
+
+        {/* 헌사 */}
+        {book.dedication ? (
+          <section className="fade-up fade-up-delay-2 bg-white/80 border border-beige-300 rounded-3xl p-7 shadow-sm mb-8 text-center">
+            <p className="text-parent-base leading-[1.85] text-ink whitespace-pre-line">
+              {book.dedication}
+            </p>
+          </section>
+        ) : null}
+
+        {/* 본문 챕터 */}
+        {chapters.map((c) => (
+          <article
+            key={c.index}
+            className="fade-up fade-up-delay-2 bg-white/80 border border-beige-300 rounded-3xl p-7 shadow-sm mb-8"
+          >
+            <p className="text-xs tracking-wider text-accent-dark font-semibold mb-4">
+              {c.parsed.title ?? `${c.index}장 — ${c.name}`}
+            </p>
+            {c.parsed.quote ? (
+              <p className="text-sm text-ink-mute italic border-l-2 border-accent/40 pl-3 mb-5">
+                “{c.parsed.quote}”
+              </p>
+            ) : null}
+            <div className="space-y-4 text-parent-base leading-[1.85] text-ink">
+              {c.parsed.paragraphs.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+          </article>
+        ))}
+
+        {/* closing */}
+        {book.closing ? (
+          <p className="fade-up fade-up-delay-3 text-center text-parent-base text-ink-soft leading-[1.85] whitespace-pre-line mt-12 mb-4">
+            {book.closing}
+          </p>
+        ) : null}
+
+        <p className="text-center text-xs text-ink-mute mt-10 leading-relaxed">
+          이 책은 가족만 볼 수 있어요 · PDF는 이메일로 보내드렸어요
+        </p>
+      </div>
+    </main>
+  );
+}
+
+function PreviewFallback({ slug, toLabel }: { slug: string; toLabel: string }) {
   return (
     <main className="min-h-dvh bg-beige px-6 py-10">
       <div className="max-w-md mx-auto">

@@ -238,11 +238,12 @@ export function buildChapterPrompt(args: {
 - 출력 형식: \`## ${chapter.index}장 — ${chapter.name}\` 헤딩 + 한두 문장 본문.`;
   }
 
+  // self 모드에서는 부모님이 본 질문(textSelf)을 그대로 전달.
   const lines = filled
     .map(
       (x, i) => `### 답변 ${i + 1} (Q${x.q.id})
 
-질문: ${(x.q.textOther ?? "").replace(/\n/g, " ")}
+질문: ${((args.mode === "self" ? x.q.textSelf : x.q.textOther) ?? "").replace(/\n/g, " ")}
 
 ${args.toLabel}의 답변:
 """
