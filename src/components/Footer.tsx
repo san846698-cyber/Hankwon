@@ -53,9 +53,27 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-10 border-t hairline flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-xs text-ink-faint max-w-5xl mx-auto">
-          <p>© 2026 한권 · 부모님의 인생을 한 권의 책으로</p>
-          <p>contact@hankwon.com</p>
+        <div className="pt-10 border-t hairline max-w-5xl mx-auto">
+          <div className="text-[11px] leading-relaxed text-ink-faint space-y-0.5 mb-6">
+            <p>상호: 스튜디오포애니(studio4any) · 대표자: 홍유빈</p>
+            <p>사업자등록번호: 799-02-03663</p>
+            <p>주소: 경기도 용인시 기흥구 동백2로 11, 4206동 201호</p>
+            <p>
+              이메일:{" "}
+              <a href="mailto:yubinhong2030@gmail.com" className="hover:text-ink-mute">
+                yubinhong2030@gmail.com
+              </a>{" "}
+              · 전화:{" "}
+              <a href="tel:01027750374" className="hover:text-ink-mute">
+                010-2775-0374
+              </a>
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between text-xs text-ink-faint">
+            <p>© 2026 한권 · 부모님의 인생을 한 권의 책으로</p>
+            <p>contact@hankwon.com</p>
+          </div>
         </div>
       </div>
     </footer>
