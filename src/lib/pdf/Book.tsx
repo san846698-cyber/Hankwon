@@ -17,6 +17,13 @@ Font.register({
       src: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff/Pretendard-Regular.woff",
       fontWeight: 400,
     },
+    // Pretendard ships no true italics; map italic → Regular so react-pdf can
+    // resolve the `fontStyle: "italic"` used in dedication/quote/closing styles.
+    {
+      src: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff/Pretendard-Regular.woff",
+      fontWeight: 400,
+      fontStyle: "italic",
+    },
     {
       src: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/woff/Pretendard-SemiBold.woff",
       fontWeight: 600,

@@ -209,8 +209,10 @@ export function getQuestionsForChapter(chapterIndex: number): Question[] {
  * 한 챕터 분량 본문을 만들기 위한 사용자 프롬프트.
  *
  * style:  'simple' = 담백하게, 'rich' = 풍성하게
- * person: 'first' = 1인칭 (나는…), 'third' = 3인칭 (어머니는…). 미지정 시 mode로 폴백.
- * mode:   인터뷰 방식 (self/other). person 미지정 시 self→1인칭, other→3인칭 폴백.
+ * mode:   인터뷰 방식 (self/other).
+ *         self(부모님 본인 자서전)는 person 값과 무관하게 항상 1인칭으로 강제.
+ * person: other 모드에서만 적용. 'first' = 1인칭 (나는…), 'third' = 3인칭 (어머니는…).
+ *         미지정 시 other는 3인칭.
  * historicalContext: Ch.6 전용, 체크한 시대적 경험 요약
  */
 export function buildChapterPrompt(args: {
@@ -252,12 +254,17 @@ ${x.a}
     )
     .join("\n\n---\n\n");
 
-  // 인칭은 person이 우선. 미지정이면 mode로 폴백(self→1인칭, other→3인칭).
-  const person = args.person ?? (args.mode === "self" ? "first" : "third");
+  // self 모드(부모님 본인의 자서전)는 항상 1인칭으로 강제한다.
+  // person 필드가 'third'(스키마 기본값)로 남아 있어도 "나은 ~했다" 같은
+  // 어색한 3인칭이 나오지 않도록 보장. other 모드만 person 선택을 따른다.
+  const person =
+    args.mode === "self" ? "first" : (args.person ?? "third");
   const isFirst = person === "first";
   const perspectiveRule = isFirst
-    ? `- **1인칭 시점으로 작성하세요. "나는...", "내가...", "나의..." — ${args.toLabel} 같은 호칭 없이 1인칭 회고록 산문으로.**
-  (이 1인칭 지시는 시스템 프롬프트의 3인칭 예시보다 우선합니다. 3인칭으로 쓰지 마세요.)`
+    ? `- **반드시 1인칭 시점으로만 작성하세요. 서술 주어는 언제나 '나'입니다 — "나는 ~했다", "내가 ~했다", "나의 ~" 형태로만 쓰세요.**
+  - ${args.toLabel} 같은 호칭이나 이름을 주어로 쓰지 마세요. "${args.toLabel}은/는...", "그는...", "그녀는..." 같은 3인칭 서술은 절대 금지입니다.
+  - 조사도 '나'에 맞추세요: "나는"(O), "나의"(O), "내가"(O) / "나은"(X), "나이"(X) 같은 틀린 조사 금지.
+  - (이 1인칭 지시는 시스템 프롬프트의 3인칭 예시보다 절대적으로 우선합니다.)`
     : `- ${args.toLabel}을 3인칭으로 부르세요 ("${args.toLabel}은...", "${args.toLabel}의..."). '나'로 쓰지 마세요.`;
 
   const styleInstruction =

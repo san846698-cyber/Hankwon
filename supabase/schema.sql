@@ -128,6 +128,23 @@ drop policy if exists "products_public_read" on public.products;
 create policy "products_public_read" on public.products
   for select using (active = true);
 
+-- ------------------------------------------------------------
+-- Grants for service_role
+--
+-- The server (webhook, /api/response, /api/generate, /book/[slug]) uses the
+-- service-role key. Write RPCs (create_response/upsert_answer/complete_response)
+-- are `security definer` so they work without table grants, but direct table
+-- reads/writes (getResponseBySlug, saveBook, getBookBySlug, updateResponseMeta,
+-- markResponseStatus) need explicit privileges or they fail with 42501.
+-- service_role bypasses RLS, so only the GRANT is required.
+-- ------------------------------------------------------------
+
+grant usage on schema public to service_role;
+grant all on all tables    in schema public to service_role;
+grant all on all sequences in schema public to service_role;
+alter default privileges in schema public grant all on tables    to service_role;
+alter default privileges in schema public grant all on sequences to service_role;
+
 -- ============================================================
 -- 4. RPC functions
 -- ============================================================

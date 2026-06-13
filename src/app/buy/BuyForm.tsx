@@ -52,6 +52,8 @@ export default function BuyForm({ plan }: Props) {
   const [email, setEmail] = useState("");
   const [style, setStyle] = useState<StyleOption>("simple");
   const [person, setPerson] = useState<PersonOption>("third");
+  // self(부모님 본인 자서전)는 항상 1인칭 — 인칭 선택 UI를 숨기고 안내만 표시.
+  const [mode, setMode] = useState<"self" | "other" | null>(null);
 
   const [waitlistEmail, setWaitlistEmail] = useState("");
   const [waitlistDone, setWaitlistDone] = useState(false);
@@ -67,17 +69,20 @@ export default function BuyForm({ plan }: Props) {
       if (metaRaw) {
         const meta = JSON.parse(metaRaw) as Record<string, unknown>;
         if (meta.style) setStyle(meta.style as StyleOption);
-        if (meta.person) {
-          // User already chose explicitly — honor it.
+        const metaMode =
+          meta.mode === "self" || meta.mode === "other" ? meta.mode : null;
+        setMode(metaMode);
+        if (metaMode === "self") {
+          // self는 항상 1인칭. 선택 UI 없이 1인칭으로 고정·저장.
+          setPerson("first");
+          persistMeta({ person: "first" });
+        } else if (meta.person) {
+          // other 모드에서 이미 선택했으면 존중.
           setPerson(meta.person as PersonOption);
         } else {
-          // No explicit choice yet: default by interview mode.
-          // self(부모님 본인 작성) → 1인칭, other(자녀 인터뷰) → 3인칭.
-          const derived: PersonOption =
-            meta.mode === "self" ? "first" : "third";
-          setPerson(derived);
-          // Persist the derived default so the DB row (and webhook) reflect it.
-          persistMeta({ person: derived });
+          // other 모드 기본값: 3인칭. DB 행(웹훅)에 반영되도록 저장.
+          setPerson("third");
+          persistMeta({ person: "third" });
         }
       }
     } catch {
@@ -311,7 +316,26 @@ export default function BuyForm({ plan }: Props) {
           </div>
         </div>
 
-        {/* Person (narration perspective) selection */}
+        {/* Person (narration perspective) selection.
+            self(본인 자서전)는 항상 1인칭이므로 선택 UI 대신 안내만 표시. */}
+        {mode === "self" ? (
+          <div className="mb-9">
+            <p className="font-display text-base text-ink mb-4" style={{ fontWeight: 700 }}>
+              인칭
+            </p>
+            <div className="rounded-2xl border border-beige-300 bg-white/60 px-5 py-4">
+              <p className="font-display text-sm text-ink mb-1" style={{ fontWeight: 700 }}>
+                1인칭 자서전으로 작성됩니다
+              </p>
+              <p className="text-sm text-ink-soft mb-1 leading-relaxed">
+                “나는 1958년 경상도에서 태어났다…”
+              </p>
+              <p className="text-xs text-ink-mute leading-relaxed">
+                본인이 직접 들려주신 이야기라, 부모님의 목소리 그대로 1인칭으로 씁니다.
+              </p>
+            </div>
+          </div>
+        ) : (
         <div className="mb-9">
           <p className="font-display text-base text-ink mb-4" style={{ fontWeight: 700 }}>
             인칭 선택
@@ -349,6 +373,7 @@ export default function BuyForm({ plan }: Props) {
             ))}
           </div>
         </div>
+        )}
 
         {/* Name / Email */}
         <div className="space-y-4 mb-8">
